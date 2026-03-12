@@ -1,7 +1,7 @@
 # Insurance Fraud Analytics Data Pipeline
 
 ## 🎯 Objective
-Build a full end-to-end data pipeline to analyze insurance/financial fraud transactions using a large-scale synthetic dataset (~21M rows). This project demonstrates cloud-based data engineering workflows, transformations, and dashboard visualization.
+Build a full end-to-end data pipeline to analyze insurance/financial fraud transactions using a large-scale synthetic dataset (~21M rows). This project demonstrates cloud-based data engineering workflows, transformations and dashboard visualization.
 
 ## Architecture
 Synthetic Fraud Dataset (21M rows) 
@@ -117,13 +117,14 @@ terraform apply
 ```
 
 3. **Launch Docker (Kestra + dbt)**
+
 ```
 docker-compose up -d
 ```
 
 4. **Run Kestra workflow**
 
-This downloads the dataset, uploads to GCS, and loads into BigQuery.
+This downloads the dataset, uploads to GCS and loads into BigQuery.
 
 5. **Run dbt transformations**
 
@@ -149,7 +150,7 @@ Create two tiles as described above
 
 **📚 Notes**
 This project uses a synthetic dataset for privacy reasons but mimics real-world financial fraud.
-Designed to showcase full-scale data engineering workflow with 21M rows, cloud storage, data warehouse, transformations, and dashboard visualization.
+Designed to showcase full-scale data engineering workflow with 21M rows, cloud storage, data warehouse, transformations and dashboard visualization.
 Reproducible using Docker, Terraform, and Kestra.
 
 **References**
