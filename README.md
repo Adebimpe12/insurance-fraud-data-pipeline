@@ -140,9 +140,10 @@ Create two tiles as described above
 
 ✅ Expected Dashboard
 ---
-Tile	Description
-Tile 1	Fraud by transaction type (categorical distribution)
-Tile 2	Fraud over time (temporal trend)
+|Tile |	Description|
+|--------------------------------|-----------------------------------------------|
+|Tile 1 |	Fraud by transaction type (categorical distribution)|
+|Tile 2 |	Fraud over time (temporal trend)|
 ---
 
 
