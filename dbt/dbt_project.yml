@@ -1,1 +1,38 @@
+name: 'financial_fraud_analytics'
+version: '1.0.0'
+config-version: 2
+
+profile: 'default'
+
+source-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+data-paths: ["data"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_modules"
+
+models:
+  financial_fraud_analytics:
+    staging:
+      +materialized: view
+      +schema: stg
+    intermediate:
+      +materialized: view
+      +schema: int
+    marts:
+      fct_fraud_summary:
+        +materialized: table
+        +schema: marts
+
+seeds:
+  financial_fraud_analytics:
+    +schema: seeds
+    +quote_columns: false
+
+vars:
+  fraud_threshold: 200000  # can be used in SQL for flagging large transactions
 
