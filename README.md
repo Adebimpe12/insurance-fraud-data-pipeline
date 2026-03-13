@@ -3,7 +3,7 @@
 ## 🎯 Objective
 Build a full end-to-end data pipeline to analyze financial fraud transactions using a large-scale synthetic dataset (~21M rows). This project demonstrates cloud-based data engineering workflows, transformations and dashboard visualization.
 
-## Architecture
+## Architecture Overview
 Synthetic Fraud Dataset (21M rows) 
 -> Kestra Workflow
 -> GCS Data Lake
@@ -11,45 +11,27 @@ Synthetic Fraud Dataset (21M rows)
 -> dbt Transformations
 -> Dashboard (Looker Studio / Streamlit)
 
-## Tools
-- Docker
-- Terraform
-- Kestra
-- GCP (GCS + BigQuery)
-- dbt Core
-- Dashboard (Looker Studio / Streamlit)
+---
+## 🛠 Tools & Technologies
 
-**Workflow Summary:**
-1. Download dataset from Hugging Face automatically via Kestra.
-2. Upload dataset to GCS (data lake).
-3. Load raw data into BigQuery tables.
-4. Transform and aggregate data using dbt (staging + fact models).
-5. Visualize insights via dashboard with two key tiles:
-   - Fraud distribution by transaction type
-   - Fraud trends over time
+**| Component                     | Tool / Service                                | Description |**
+|--------------------------------|-----------------------------------------------|
+| Cloud Platform                 | GCP (GCS + BigQuery)                          | Storage and data warehouse |
+| Workflow Orchestration         | Kestra                                        | ETL orchestration and automation |
+| Infrastructure as Code (IaC)  | Terraform                                     | Provision GCP resources |
+| Data Transformation            | dbt Core + dbt Cloud                          | Staging, intermediate, and fact models |
+| Local Development / Testing    | Docker                                        | Run Kestra + dbt locally |
+| Analytics & Dashboard          | Looker Studio or Streamlit                     | Visualize fraud insights |
+| Data Processing (Optional)     | Spark, DuckDB (for local testing)             |                                 |
+| Dataset                        | Synthetic financial fraud dataset (~21M rows) | Source of transaction data |
 
+---
 
-## Steps
-1. Run Terraform to create GCP infra.
-2. Launch Docker (Kestra + dbt) locally.
-3. Execute Kestra workflow to:
-   - Download dataset
-   - Upload to GCS
-   - Load into BigQuery
-4. Run dbt transformations.
-5. Build a dashboard with 2 tiles:
-   - Fraud by transaction type
-   - Fraud over time
-
-
-Dashboard description: two tiles
-Tile 1: Fraud by transaction type
-Tile 2: Fraud over time
-
-Dataset source & info: synthetic Cifer 21M dataset (https://huggingface.co/datasets/CiferAI/Cifer-Fraud-Detection-Dataset-AF)
-- Type: Synthetic but modeled on real banking/fintech fraud transactions  
+**Dataset Details**
+Dataset source: https://huggingface.co/datasets/CiferAI/Cifer-Fraud-Detection-Dataset-AF
+- Type: Synthetic Cifer dataset but modeled on real banking/fintech fraud transactions  
 - Size: ~21,000,000 rows  
-- Key columns:
+- Columns:
   - `step` — time step
   - `type` — transaction type (PAYMENT, TRANSFER, CASH_OUT, etc.)
   - `amount` — transaction value
@@ -59,21 +41,6 @@ Dataset source & info: synthetic Cifer 21M dataset (https://huggingface.co/datas
   - `isFlaggedFraud` — flagged transactions
 
   
----
-## 🛠 Tools & Technologies
-
-| Component                     | Tool / Service                                |
-|--------------------------------|-----------------------------------------------|
-| Cloud Platform                 | GCP (GCS + BigQuery)                          |
-| Workflow Orchestration         | Kestra                                        |
-| Infrastructure as Code (IaC)  | Terraform                                     |
-| Data Transformation            | dbt Core + dbt Cloud                          |
-| Local Development / Testing    | Docker                                        |
-| Analytics & Dashboard          | Looker Studio or Streamlit                     |
-| Data Processing (Optional)     | Spark, DuckDB (for local testing)             |
-| Dataset                        | Synthetic financial fraud dataset (~21M rows) |
-
----
 
 ## ⚡ Pipeline Steps
 
@@ -87,15 +54,16 @@ Dataset source & info: synthetic Cifer 21M dataset (https://huggingface.co/datas
    - Load dataset into BigQuery table `transactions_raw`
 
 3. **Data Transformation (dbt)**
-   - `stg_transactions` — staging table
-   - `fct_fraud_summary` — aggregate metrics for dashboard:
-     - Fraud counts by transaction type
-     - Total transaction amounts
-     - Fraud rate per type
+- Staging Models (stg_transactions.sql) — Standardize raw data
+- Intermediate Models (intermediate/int_fraud_transactions.sql) — Fraud flags & metrics
+- Fact Models (marts/fct_fraud_summary.sql) — Aggregated data for dashboard:
+- Fraud counts by transaction type
+- Total transaction amounts
+- Fraud rate per type
 
 4. **Dashboard**
    - Tile 1: Bar chart — fraud distribution by transaction type  
-   - Tile 2: Line chart — fraud over time (by `step`)  
+   - Tile 2: Line chart — fraud trends over time (by `step`)  
 
 
 
