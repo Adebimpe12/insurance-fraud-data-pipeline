@@ -14,7 +14,7 @@ Synthetic Fraud Dataset (21M rows)
 ---
 ## 🛠 Tools & Technologies
 
-**| Component                     | Tool / Service                                | Description |**
+| Component                     | Tool / Service                                | Description |
 |--------------------------------|-----------------------------------------------|
 | Cloud Platform                 | GCP (GCS + BigQuery)                          | Storage and data warehouse |
 | Workflow Orchestration         | Kestra                                        | ETL orchestration and automation |
