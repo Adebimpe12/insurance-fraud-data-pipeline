@@ -1,0 +1,28 @@
+dbt/target/
+dbt/logs/
+logs/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+
+# dbt
+dbt/target/
+dbt/logs/
+
+# logs
+logs/
+
+# terraform
+*.tfstate
+*.tfstate.backup
+
+# data
+data/*.csv
+
+# python
+__pycache__/
+*.pyc
+
+# env
+.env
+
+terraform/terraform.tfvars

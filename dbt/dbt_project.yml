@@ -34,5 +34,5 @@ seeds:
     +quote_columns: false
 
 vars:
-  fraud_threshold: 200000  # can be used in SQL for flagging large transactions
+  fraud_threshold: 200000 
 

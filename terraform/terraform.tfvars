@@ -1,5 +1,5 @@
 # terraform.tfvars
-project_id             = "fraud-analytics-pipeline"
+project_id             = "spatial-rig-493920-b5"
 region                 = "us-central1"
 bigquery_dataset       = "fraud_dataset"
 raw_data_bucket        = "fraud-data-lake"

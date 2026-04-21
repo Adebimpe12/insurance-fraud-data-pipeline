@@ -1,31 +1,51 @@
 # Financial Fraud Analytics Pipeline
 
-## 🎯 Objective
+## Objective
 Build a full end-to-end data pipeline to analyze financial fraud transactions using a large-scale synthetic dataset (~21M rows). This project demonstrates cloud-based data engineering workflows, transformations and dashboard visualization.
 
 ## Architecture Overview
-Synthetic Fraud Dataset (21M rows) 
--> Kestra Workflow
--> GCS Data Lake
--> BigQuery Data Warehouse
--> dbt Transformations
--> Dashboard (Looker Studio / Streamlit)
-
+Dataset (21M rows)
+   ↓
+Kestra (Orchestration)
+   ↓
+GCS (Data Lake)
+   ↓
+BigQuery (Warehouse)
+   ↓
+dbt (Transformations)
+   ↓
+Dashboard (Looker Studio)
+   ↓
+Real-time Pipeline (Pub/Sub → BigQuery)
 ---
-## 🛠 Tools & Technologies
+## Tools & Technologies
 
-| Component                     | Tool / Service                                | Description |
-| -------------------------------- |----------------------------------------------- |
-| Cloud Platform                 | GCP (GCS + BigQuery)                          | Storage and data warehouse |
-| Workflow Orchestration         | Kestra                                        | ETL orchestration and automation |
-| Infrastructure as Code (IaC)  | Terraform                                     | Provision GCP resources |
-| Data Transformation            | dbt Core + dbt Cloud                          | Staging, intermediate, and fact models |
-| Local Development / Testing    | Docker                                        | Run Kestra + dbt locally |
-| Analytics & Dashboard          | Looker Studio or Streamlit                     | Visualize fraud insights |
-| Data Processing (Optional)     | Spark, DuckDB (for local testing)             |                                 |
-| Dataset                        | Synthetic financial fraud dataset (~21M rows) | Source of transaction data |
+Component	Tool	Description
+Cloud	GCP (GCS + BigQuery)	Storage + warehouse
+Orchestration	Kestra	Batch pipeline automation
+IaC	Terraform	Infrastructure provisioning
+Transformations	dbt	Data modeling
+Streaming	GCP Pub/Sub	Real-time ingestion
+Dashboard	Looker Studio / Streamlit	Visualization
+Processing	DuckDB	Local testing
+Containerization	Docker	Local environment
 
----
+## Features
+   -Anomalies in Debit and Credit Payment.png
+   -Average Amount of Fraud by Transaction Type.png
+   -Total Amount.png
+
+## Key Insights
+   CASH_OUT transactions show the highest fraud concentration
+   Fraud likelihood increases with transaction anomalies
+   High-value transactions are more likely to trigger alerts
+
+## Business Value:
+This dashboard helps financial institutions:
+- Detect suspicious transaction patterns
+- Monitor fraud trends in real time
+- Prioritize high-risk transaction types
+- Trigger alerts for further investigation
 
 **Dataset Details**
 Dataset source: https://huggingface.co/datasets/CiferAI/Cifer-Fraud-Detection-Dataset-AF
@@ -42,11 +62,16 @@ Dataset source: https://huggingface.co/datasets/CiferAI/Cifer-Fraud-Detection-Da
 
   
 
-## ⚡ Pipeline Steps
+## Pipeline Steps
 
 1. **Infrastructure (Terraform)**
    - Create GCS bucket (`fraud-data-lake`)
-   - Create BigQuery dataset (`fraud_dataset`)
+   - Create BigQuery BigQuery datasets:
+
+      -fraud_dataset
+      -fraud_dataset_stg
+      -fraud_dataset_int
+      -fraud_dataset_marts
 
 2. **Workflow (Kestra)**
    - Download dataset from Hugging Face
@@ -54,24 +79,51 @@ Dataset source: https://huggingface.co/datasets/CiferAI/Cifer-Fraud-Detection-Da
    - Load dataset into BigQuery table `transactions_raw`
 
 3. **Data Transformation (dbt)**
-- Staging Models (stg_transactions.sql) — Standardize raw data
-- Intermediate Models (intermediate/int_fraud_transactions.sql) — Fraud flags & metrics
-- Fact Models (marts/fct_fraud_summary.sql) — Aggregated data for dashboard:
-- Fraud counts by transaction type
-- Total transaction amounts
-- Fraud rate per type
+   -Staging
+      -stg_transactions
+      -Cleans and standardizes raw data
+   -Intermediate
+      -int_fraud_transactions
+      -Aggregates transactions
+      -Creates fraud metrics
+   -Marts
+      -fct_fraud_summary
+      -Final analytical table
 
-4. **Dashboard**
-   - Tile 1: Bar chart — fraud distribution by transaction type  
-   - Tile 2: Line chart — fraud trends over time (by `step`)  
+4. **Streaming Pipeline**
+
+   A real-time streaming pipeline was implemented using Pub/Sub.
+   A Python producer simulates transactions and publishes messages.
+   A consumer subscribes and streams data into BigQuery.
 
 
+### How to run
+```
+cd streaming
+docker-compose up -d
 
-## 🚀 Running the Project
+# start consumer
+python consumer.py
+
+# start producer
+python producer.py
+```
+
+## Data Warehouse Optimization
+
+The BigQuery tables are optimized using:
+
+- Partitioning by `step` (time-based transaction progression)
+- Clustering by `type` (transaction category)
+
+This improves query performance for fraud analysis and reduces query cost.
+
+
+##  Running the Project
 
 1. **Clone the repo**
    
-```bash
+```
 git clone https://github.com/<your-username>/fraud-data-pipeline.git
 cd fraud-data-pipeline
 ```
@@ -100,23 +152,20 @@ This downloads the dataset, uploads to GCS and loads into BigQuery.
 cd dbt
 dbt run
 ```
+6. **Run streaming**
+```
+cd streaming
+python consumer.py
+python producer.py
+```
 
-6. **Build dashboard**
+7. **Build dashboard**
 
-Connect to BigQuery or export dbt models to Looker Studio / Streamlit
-
-Create two tiles as described above
-
-✅ Expected Dashboard
----
-|Tile |	Description|
-|--------------------------------|-----------------------------------------------|
-|Tile 1 |	Fraud by transaction type (categorical distribution)|
-|Tile 2 |	Fraud over time (temporal trend)|
----
+Connect to BigQuery or export dbt models to Looker Studio
 
 
-**📚 Notes**
+
+**Notes**
 This project uses a synthetic dataset for privacy reasons but mimics real-world financial fraud.
 Designed to showcase full-scale data engineering workflow with 21M rows, cloud storage, data warehouse, transformations and dashboard visualization.
 Reproducible using Docker, Terraform, and Kestra.

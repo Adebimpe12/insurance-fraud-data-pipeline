@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: fct_fraud_summary
+    columns:
+      - name: type
+        tests:
+          - not_null
+
+      - name: fraud_rate
+        tests:
+          - not_null
+
+      - name: alert_flag
+        tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]

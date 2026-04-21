@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: fraud_dataset
+    database: spatial-rig-493920-b5   
+    schema: fraud_dataset
+
+    tables:
+      - name: transactions_raw
